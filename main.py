@@ -287,7 +287,7 @@ async def upload_interview_audio(
     interviewee_id: int = Form(...),
     interviewer_name: str = Form(...),
     questions: str = Form(...),  # JSON string of questions
-    background_tasks: BackgroundTasks,
+    background_tasks: BackgroundTasks = BackgroundTasks(),
     current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
@@ -344,7 +344,7 @@ async def get_interview_status(
 @app.post("/api/knowledge-reports/generate/{interview_id}")
 async def generate_knowledge_report(
     interview_id: int,
-    background_tasks: BackgroundTasks,
+    background_tasks: BackgroundTasks = BackgroundTasks(),
     current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
@@ -489,8 +489,8 @@ async def get_chat_history(
 @app.post("/api/maintenance/run-task/{task_name}")
 async def run_maintenance_task(
     task_name: str,
-    current_user: User = Depends(require_admin),
-    background_tasks: BackgroundTasks
+    background_tasks: BackgroundTasks,
+    current_user: User = Depends(require_admin)
 ):
     background_tasks.add_task(maintenance_service.run_maintenance_task, task_name)
     return {"message": f"Maintenance task '{task_name}' started in background"}
