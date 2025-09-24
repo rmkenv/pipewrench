@@ -40,7 +40,7 @@ A comprehensive system for capturing, preserving, and operationalizing organizat
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone <https://github.com/rmkenv/pipewrench>
 cd knowledge_capture_mvp
 ```
 
