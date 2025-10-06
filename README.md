@@ -1,82 +1,127 @@
-# Knowledge Capture MVP
+# Pipewrench - Knowledge Capture and Management System
 
-A comprehensive system for capturing, preserving, and operationalizing organizational knowledge through AI-powered document ingestion, employee interviews, and chatbot training.
+A comprehensive, production-ready system for capturing, preserving, and operationalizing organizational knowledge through AI-powered document ingestion, employee interviews, and chatbot training.
+
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-green.svg)](https://fastapi.tiangolo.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## 🚀 Features
 
-- **Document Management**: Upload and process various document types (PDF, DOC, TXT)
-- **AI-Powered Question Generation**: Generate tailored interview questions using Anthropic API
+- **Document Management**: Upload and process various document types (PDF, DOC, DOCX, TXT)
+- **AI-Powered Question Generation**: Generate tailored interview questions using Anthropic Claude or OpenAI GPT
 - **Audio Transcription**: Automatic transcription using Sonix API
 - **Knowledge Report Generation**: AI-generated comprehensive reports for each role
-- **RAG-Powered Chatbot**: Chat with organizational knowledge base
-- **Chat with Files**: Upload and chat with individual documents
+- **RAG-Powered Chatbot**: Chat with organizational knowledge base using vector search
 - **Ongoing Maintenance**: Automated system maintenance and content review
-- **Security**: Role-based access control, authentication, and audit trails
+- **Security**: Role-based access control, JWT authentication, and audit trails
+- **Production-Ready**: Comprehensive error handling, logging, and monitoring
 
 ## 🏗️ Architecture
 
-- **Backend**: FastAPI with Python
+- **Backend**: FastAPI with Python 3.11+
 - **Frontend**: Streamlit web interface
-- **Database**: PostgreSQL (main), MongoDB (documents), Redis (caching)
-- **Vector Database**: Pinecone or Weaviate for RAG
+- **Database**: PostgreSQL (main data), MongoDB (documents - optional), Redis (caching - optional)
+- **Vector Database**: Pinecone or in-memory (for RAG)
 - **AI Services**: Anthropic Claude, OpenAI GPT, Sonix transcription
 - **Authentication**: JWT-based with role-based access control
 
 ## 📋 Prerequisites
 
-- Python 3.11+
-- PostgreSQL 15+
-- Redis 7+
-- MongoDB 7+
+- Python 3.11 or higher
+- PostgreSQL 15+ (required)
+- Redis 7+ (optional, for caching)
+- MongoDB 7+ (optional, for document storage)
 - API Keys for:
-  - Anthropic
-  - OpenAI (optional)
-  - Sonix
-  - Pinecone or Weaviate (optional)
+  - Anthropic Claude (recommended) or OpenAI GPT
+  - Sonix (for transcription - optional)
+  - Pinecone (for vector database - optional)
 
 ## 🛠️ Installation
 
-### Option 1: Automated Setup
+### Quick Start (Recommended)
 
-1. Clone the repository:
+1. **Clone the repository**:
 ```bash
-git clone <https://github.com/rmkenv/pipewrench>
-cd knowledge_capture_mvp
+git clone https://github.com/rmkenv/pipewrench.git
+cd pipewrench
 ```
 
-2. Run the setup script:
+2. **Run the setup script**:
 ```bash
-python setup.py
+chmod +x run_dev.sh
+./run_dev.sh
 ```
 
-3. Edit the `.env` file with your API keys and configuration.
-
-4. Start the application:
-```bash
-# Start backend
-python main.py
-
-# Start frontend (in another terminal)
-streamlit run frontend/streamlit_app.py
-```
-
-### Option 2: Docker Setup
-
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd knowledge_capture_mvp
-```
-
-2. Copy and edit environment file:
+3. **Configure environment variables**:
 ```bash
 cp .env.template .env
-# Edit .env with your API keys
+# Edit .env with your API keys and configuration
+nano .env
 ```
 
-3. Start with Docker Compose:
+4. **Start the application**:
+```bash
+python main.py
+```
+
+The application will be available at:
+- Backend API: http://localhost:8000
+- API Documentation: http://localhost:8000/docs
+- Health Check: http://localhost:8000/health
+
+### Manual Installation
+
+1. **Create and activate virtual environment**:
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+2. **Install dependencies**:
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+3. **Setup PostgreSQL database**:
+```bash
+# Create database
+createdb pipewrench
+
+# Or using psql
+psql -U postgres
+CREATE DATABASE pipewrench;
+\q
+```
+
+4. **Configure environment**:
+```bash
+cp .env.template .env
+# Edit .env file with your configuration
+```
+
+5. **Initialize database**:
+```bash
+python -c "from db.connection import create_tables; create_tables()"
+```
+
+6. **Start the application**:
+```bash
+python main.py
+```
+
+### Docker Installation
+
+1. **Build and start containers**:
 ```bash
 docker-compose up -d
+```
+
+2. **Configure environment**:
+```bash
+cp .env.template .env
+# Edit .env with your configuration
 ```
 
 The application will be available at:
@@ -84,206 +129,324 @@ The application will be available at:
 - Backend API: http://localhost:8000
 - API Documentation: http://localhost:8000/docs
 
-### Option 3: Manual Setup
+## ⚙️ Configuration
 
-1. **Setup Python Environment**:
-```bash
-python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-2. **Setup Databases**:
-```bash
-# PostgreSQL
-createdb knowledge_capture
-
-# Start Redis
-redis-server
-
-# Start MongoDB
-mongod
-```
-
-3. **Configuration**:
-```bash
-cp .env.template .env
-# Edit .env file with your configuration
-```
-
-4. **Initialize Database**:
-```bash
-python -c "from db.connection import create_tables; create_tables()"
-```
-
-5. **Start Application**:
-```bash
-# Backend
-uvicorn main:app --reload
-
-# Frontend (in another terminal)
-streamlit run frontend/streamlit_app.py
-```
-
-## 📖 Usage
-
-### 1. Document Upload
-- Navigate to "Document Management"
-- Upload job descriptions, SOPs, BMPs, and other organizational documents
-- Documents are automatically processed and indexed for search
-
-### 2. Job Roles & Interviews
-- Create job roles in the system
-- Generate AI-powered interview questions
-- Upload interview recordings for automatic transcription
-
-### 3. Knowledge Report Generation
-- Generate comprehensive knowledge reports from completed interviews
-- Reports include SWOT analysis and structured data for RAG
-
-### 4. Chat Assistant
-- Chat with the organizational knowledge base
-- Get answers based on all uploaded documents and knowledge reports
-- Sources are automatically cited
-
-### 5. Chat with Files
-- Upload individual files for targeted Q&A
-- Perfect for analyzing specific documents
-
-### 6. System Maintenance
-- Automated maintenance tasks keep the system current
-- Manual maintenance options for administrators
-
-## 🔧 Configuration
-
-Key configuration options in `.env`:
+### Required Environment Variables
 
 ```env
-# API Keys
-ANTHROPIC_API_KEY=your_anthropic_api_key
-OPENAI_API_KEY=your_openai_api_key
-SONIX_API_KEY=your_sonix_api_key
+# API Keys (at least one AI provider required)
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+OPENAI_API_KEY=your_openai_api_key_here
 
-# Database URLs
-DATABASE_URL=postgresql://user:password@localhost/knowledge_capture
+# Database (PostgreSQL required)
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/pipewrench
+
+# Security (change in production!)
+SECRET_KEY=your-super-secret-key-change-this-in-production
+```
+
+### Optional Environment Variables
+
+```env
+# Transcription Service
+SONIX_API_KEY=your_sonix_api_key_here
+
+# Vector Database
+PINECONE_API_KEY=your_pinecone_api_key_here
+
+# Optional Databases
 MONGODB_URL=mongodb://localhost:27017
 REDIS_URL=redis://localhost:6379
 
-# Security
-SECRET_KEY=your-super-secret-key
+# Application Settings
+DEBUG=False
+LOG_LEVEL=INFO
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8501
 ```
 
-## 🛡️ Security
+See `.env.template` for all available configuration options.
 
-- JWT-based authentication
-- Role-based access control (admin, manager, user)
-- Secure file upload with validation
-- Audit logging for all actions
-- Data encryption at rest and in transit
+## 📖 Usage
 
-## 📚 API Documentation
+### 1. User Registration and Authentication
 
-Once the backend is running, visit:
-- Interactive API docs: http://localhost:8000/docs
-- Alternative docs: http://localhost:8000/redoc
+```bash
+# Register a new user
+curl -X POST "http://localhost:8000/api/auth/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "admin",
+    "email": "admin@example.com",
+    "password": "securepassword123",
+    "role": "admin"
+  }'
+
+# Login
+curl -X POST "http://localhost:8000/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "admin",
+    "password": "securepassword123"
+  }'
+```
+
+### 2. Document Upload
+
+```bash
+# Upload a document
+curl -X POST "http://localhost:8000/api/documents/upload" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -F "file=@document.pdf" \
+  -F "document_type=sop"
+```
+
+### 3. Job Roles and Interviews
+
+```bash
+# Create a job role
+curl -X POST "http://localhost:8000/api/job-roles" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Software Engineer",
+    "department": "Engineering",
+    "description": "Develops software applications"
+  }'
+
+# Generate interview questions
+curl -X POST "http://localhost:8000/api/job-roles/1/generate-questions" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### 4. Chat with Knowledge Base
+
+```bash
+# Send a chat message
+curl -X POST "http://localhost:8000/api/chat" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "What are the key responsibilities of a Software Engineer?"
+  }'
+```
 
 ## 🧪 Testing
 
-Run tests:
+Run the test suite:
+
 ```bash
-pytest tests/
+# Run all tests
+pytest test_main.py -v
+
+# Run with coverage
+pytest test_main.py -v --cov=. --cov-report=html
+
+# Run specific test class
+pytest test_main.py::TestAuthentication -v
 ```
 
-## 🚀 Deployment
+## 🔧 Development
 
-### Production Deployment with Docker
+### Code Quality
 
-1. **Update docker-compose.prod.yml** for production settings
-2. **Configure environment variables** for production
-3. **Setup SSL/TLS** with reverse proxy (nginx)
-4. **Configure backup strategies** for databases
-5. **Setup monitoring** and logging
+```bash
+# Format code
+black . --exclude venv
 
-### Environment Variables for Production
+# Lint code
+flake8 . --exclude=venv --max-line-length=120
 
-```env
-DEBUG=False
-SECRET_KEY=production-secret-key
-DATABASE_URL=postgresql://prod_user:prod_password@db:5432/knowledge_capture
+# Type checking
+mypy . --exclude venv --ignore-missing-imports
 ```
 
-## 📝 Maintenance
+### Using Makefile
 
-The system includes automated maintenance tasks:
+```bash
+make help          # Show available commands
+make install       # Install dependencies
+make dev           # Run development server
+make test          # Run tests
+make lint          # Run linters
+make format        # Format code
+make clean         # Clean temporary files
+```
 
-- **Daily**: Cleanup old chat sessions, validate transcriptions
-- **Weekly**: Review outdated content, backup database  
-- **Monthly**: Reindex vector database, audit user access, suggest report updates
+## 🚀 Production Deployment
 
-Manual maintenance tasks can be run from the admin interface.
+### Security Checklist
+
+- [ ] Change `SECRET_KEY` to a strong random value
+- [ ] Set `DEBUG=False`
+- [ ] Configure `ALLOWED_ORIGINS` with your actual domains
+- [ ] Use HTTPS/TLS for all connections
+- [ ] Set up proper database backups
+- [ ] Configure firewall rules
+- [ ] Use environment-specific configuration
+- [ ] Enable rate limiting
+- [ ] Set up monitoring and alerting
+- [ ] Review and update CORS settings
+
+### Deployment Options
+
+#### 1. Traditional Server Deployment
+
+```bash
+# Install production server
+pip install gunicorn
+
+# Run with Gunicorn
+gunicorn main:app \
+  --workers 4 \
+  --worker-class uvicorn.workers.UvicornWorker \
+  --bind 0.0.0.0:8000 \
+  --access-logfile logs/access.log \
+  --error-logfile logs/error.log
+```
+
+#### 2. Docker Deployment
+
+```bash
+# Build and deploy
+docker-compose -f docker-compose.prod.yml up -d
+
+# View logs
+docker-compose logs -f
+
+# Scale workers
+docker-compose up -d --scale backend=4
+```
+
+#### 3. Cloud Deployment
+
+See `docs/deployment/` for platform-specific guides:
+- AWS (EC2, ECS, Lambda)
+- Google Cloud Platform
+- Azure
+- Heroku
+- DigitalOcean
+
+## 📊 Monitoring and Logging
+
+### Logs
+
+Application logs are stored in `logs/app.log` in JSON format for easy parsing.
+
+```bash
+# View logs
+tail -f logs/app.log
+
+# Parse JSON logs
+cat logs/app.log | jq '.'
+```
+
+### Health Check
+
+```bash
+# Check application health
+curl http://localhost:8000/health
+```
+
+### Metrics
+
+The application exposes metrics at `/metrics` (when configured).
+
+## 🛡️ Security
+
+- **Authentication**: JWT-based authentication with configurable expiration
+- **Authorization**: Role-based access control (admin, manager, user)
+- **Password Security**: Bcrypt hashing with salt
+- **Input Validation**: Pydantic models for all inputs
+- **CORS**: Configurable allowed origins
+- **Rate Limiting**: Recommended for production (use nginx or API gateway)
+- **Audit Logging**: All admin actions are logged
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Follow PEP 8 style guide
+- Add tests for new features
+- Update documentation
+- Use type hints
+- Add docstrings to functions and classes
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🆘 Support
-
-For support and questions:
-- Create an issue in the repository
-- Check the documentation at http://localhost:8000/docs
-- Review the troubleshooting section below
-
-## 🐛 Troubleshooting
+## 🆘 Support and Troubleshooting
 
 ### Common Issues
 
-1. **Database Connection Error**:
-   - Ensure PostgreSQL is running
-   - Check DATABASE_URL in .env file
-   - Verify database exists
+**1. Database Connection Error**
+```bash
+# Check PostgreSQL is running
+pg_isready
 
-2. **API Key Errors**:
-   - Verify API keys in .env file
-   - Check API key permissions and quotas
+# Verify DATABASE_URL in .env
+echo $DATABASE_URL
+```
 
-3. **File Upload Issues**:
-   - Check file size limits
-   - Verify upload directory permissions
-   - Ensure supported file types
+**2. API Key Errors**
+```bash
+# Verify API keys are set
+python -c "from config.settings import settings; print(settings.anthropic_api_key[:10])"
+```
 
-4. **Transcription Failures**:
-   - Verify Sonix API key and quota
-   - Check audio file format and quality
-   - Review transcription service logs
+**3. Import Errors**
+```bash
+# Reinstall dependencies
+pip install -r requirements.txt --force-reinstall
+```
 
-### Logs and Monitoring
+**4. Port Already in Use**
+```bash
+# Change port in .env
+PORT=8001
 
-- Application logs: Check console output
-- Database logs: Check PostgreSQL logs
-- File upload logs: Check uploads directory permissions
+# Or kill process using port 8000
+lsof -ti:8000 | xargs kill -9
+```
 
-## 🔄 Version History
+### Getting Help
 
-- **v1.0.0**: Initial MVP release
-  - Document management
-  - Interview processing
-  - Knowledge report generation
-  - RAG-powered chatbot
-  - Maintenance system
+- 📖 [Documentation](http://localhost:8000/docs)
+- 🐛 [Issue Tracker](https://github.com/rmkenv/pipewrench/issues)
+- 💬 [Discussions](https://github.com/rmkenv/pipewrench/discussions)
 
 ## 🗺️ Roadmap
 
-- [ ] Enhanced AI model integration
+- [ ] Enhanced AI model integration (Claude 3.5, GPT-4)
 - [ ] Advanced analytics dashboard
 - [ ] Mobile application
 - [ ] Enterprise SSO integration
 - [ ] Advanced reporting features
 - [ ] Multi-language support
+- [ ] Real-time collaboration features
+- [ ] Advanced search capabilities
+- [ ] Integration with popular tools (Slack, Teams, etc.)
+
+## 📝 Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a detailed history of changes.
+
+## 👥 Authors
+
+- **rmkenv** - *Initial work* - [GitHub](https://github.com/rmkenv)
+
+## 🙏 Acknowledgments
+
+- FastAPI for the excellent web framework
+- Anthropic and OpenAI for AI capabilities
+- The open-source community for various libraries and tools
+
+---
+
+**Note**: This is a production-ready release with comprehensive error handling, logging, and security features. Always review and test thoroughly before deploying to production.
