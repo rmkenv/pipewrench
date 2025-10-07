@@ -1,39 +1,80 @@
-fastapi==0.104.1
-uvicorn==0.24.0
-python-multipart==0.0.6
-sqlalchemy==2.0.23
-psycopg2-binary==2.9.9
-pymongo==4.6.0
-redis==5.0.1
-celery==5.3.4
-anthropic==0.7.8
-openai==1.3.7
-langchain==0.1.0
-langchain-community==0.0.10
-langchain-openai==0.0.2
-pinecone-client==2.2.4
-weaviate-client==3.25.3
-sentence-transformers==2.2.2
+
+# Core Framework
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+python-multipart==0.0.20
+
+# Database
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.10
+pymongo==4.10.1
+redis==5.2.1
+alembic==1.14.0
+
+# Task Queue
+celery==5.4.0
+
+# AI/LLM
+anthropic==0.39.0
+openai==1.57.2
+langchain==0.3.13
+langchain-community==0.3.13
+langchain-openai==0.2.14
+langchain-anthropic==0.3.0
+
+# Vector Databases
+pinecone-client==5.0.1
+weaviate-client==4.9.3
+
+# Embeddings
+sentence-transformers==3.3.1
+
+# Document Processing
 PyPDF2==3.0.1
-python-docx==1.1.0
+python-docx==1.1.2
+python-pptx==1.0.2
+openpyxl==3.1.5
+
+# Security
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-python-multipart==0.0.6
-aiofiles==23.2.1
-httpx==0.25.2
-pydantic==2.5.0
-pydantic-settings==2.1.0
-python-dotenv==1.0.0
-streamlit==1.28.2
-gradio==4.8.0
-requests==2.31.0
-pandas==2.1.4
-numpy==1.24.3
-matplotlib==3.8.2
-seaborn==0.13.0
-plotly==5.17.0
-jinja2==3.1.2
-pytest==7.4.3
-pytest-asyncio==0.21.1
-black==23.11.0
-flake8==6.1.0
+pydantic[email]==2.10.4
+pydantic-settings==2.6.1
+
+# Utilities
+python-dotenv==1.0.1
+aiofiles==24.1.0
+httpx==0.28.1
+requests==2.32.3
+
+# Data Processing
+pandas==2.2.3
+numpy==2.2.1
+
+# Visualization (for reports)
+matplotlib==3.9.3
+seaborn==0.13.2
+plotly==5.24.1
+
+# Frontend
+streamlit==1.41.1
+gradio==5.9.1
+
+# Template Engine
+jinja2==3.1.5
+
+# Testing
+pytest==8.3.4
+pytest-asyncio==0.24.0
+pytest-cov==6.0.0
+httpx==0.28.1
+
+# Code Quality
+black==24.10.0
+flake8==7.1.1
+mypy==1.13.0
+bandit==1.8.0
+safety==3.2.11
+
+# Logging
+python-json-logger==3.2.1
