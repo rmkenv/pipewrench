@@ -12,7 +12,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy frontend code
-COPY frontend/ ./frontend/
+COPY ./streamlit_app.py ./frontend/streamlit_app.py
 COPY config/ ./config/
 
 # Expose Streamlit port
